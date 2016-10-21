@@ -10,8 +10,6 @@
 
 #import <CoreFoundation/CoreFoundation.h>
 
-#import <Sparkle/Sparkle.h>
-
 #import "JPLaunchAtLoginManager.h"
 #import "DSFavIconManager.h"
 
@@ -45,10 +43,6 @@
     [queue addPath:[self syncedPreferencesFile] notifyingAbout:VDKQueueNotifyDefault];
     [queue addPath:[self syncedBookmarksFile] notifyingAbout:VDKQueueNotifyDefault];
     [queue setDelegate:self];
-
-    // Setup Sparkle
-    SUUpdater *updater = [[SUUpdater class] sharedUpdater];
-    [updater checkForUpdatesInBackground];
 }
 
 #pragma mark - Menu actions
