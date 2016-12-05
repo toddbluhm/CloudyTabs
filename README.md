@@ -16,6 +16,8 @@ Typing the first few letters or a tab's title will jump to that particular tab.
 
 Hovering over the CloudyTabs menu bar icon displays a tooltip which lists the date that iCloud last updated the synced tabs `plist` (where CloudyTabs reads data from).
 
+## Updates
+
 This version also contains fixes not merged in by original maintainer including:
 - Added Reading List items (cl3m)
 - Removed devices without open tabs (iMadden)
