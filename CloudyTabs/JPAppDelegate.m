@@ -169,9 +169,7 @@
 
     for (NSString *deviceID in [dictionary[@"values"] allKeys]) {
         // Hide devices that haven't had activity in the last week (604800 = 7×24×60×60 = one week in seconds)
-        if ([dictionary[@"values"][deviceID][@"value"][@"LastModified"] timeIntervalSinceNow] < 604800) {
-            [deviceIDs addObject:deviceID];
-        }
+        [deviceIDs addObject:deviceID];
     }
     return deviceIDs;
 }
@@ -211,6 +209,13 @@
 - (NSString *)appBundleName
 {
     return [[[NSBundle mainBundle] infoDictionary]  objectForKey:@"CFBundleName"];
+}
+
+-(NSString*)trimTitle:(NSString*)title {
+    if(title.length > 60){
+        return [NSString stringWithFormat:@"%@...",[title substringToIndex:59]];
+    }
+    return title;
 }
 
 - (void)updateMenu
@@ -254,9 +259,11 @@
             [openAllTabsFromDeviceMenuItem setEnabled:NO];
         }
         [devicesMenu addItem:openAllTabsFromDeviceMenuItem];
+        NSUInteger start_idx = [self.menu numberOfItems];
 
         for (NSDictionary *tabDictionary in arrayOfTabs) {
-            [self.menu addItem:[self makeMenuItemWithTitle:tabDictionary[@"Title"] URL:tabDictionary[@"URL"]]];
+            NSString* tab_title = [self trimTitle:tabDictionary[@"Title"]];
+            [self.menu insertItem:[self makeMenuItemWithTitle:tab_title URL:tabDictionary[@"URL"]] atIndex:start_idx];
         }
     }
 
@@ -269,7 +276,8 @@
         [self.menu addItem:readingListTitle];
         
         for (NSDictionary *bookmarkDictionary in [self readingListBookmarks]) {
-            [self.menu addItem:[self makeMenuItemWithTitle:bookmarkDictionary[@"URIDictionary"][@"title"] URL:bookmarkDictionary[@"URLString"]]];
+            NSString* item_title = [self trimTitle:bookmarkDictionary[@"URIDictionary"][@"title"]];
+            [self.menu addItem:[self makeMenuItemWithTitle:item_title URL:bookmarkDictionary[@"URLString"]]];
         }
     }
 
@@ -326,6 +334,7 @@
 - (void)updateStatusItemToolTip
 {
     NSString *toolTip = [NSString stringWithFormat:NSLocalizedString(@"%@\niCloud Last Synced: %@", @""), [self appBundleName], [self.dateFormatter stringFromDate:[self syncedModificationDate]]];
+    NSLog(@"%@", toolTip);
     [self.statusItem setToolTip:toolTip];
 }
 
